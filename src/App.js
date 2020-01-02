@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+import Navbar from './components/layout/Navbar';
+import NoteList from './components/notes/NoteList';
+import Note from './components/notes/Note';
+import ShiftNote from './components/notes/ShiftNote';
+
+import ProviderContext from './store/ProviderContext';
+
 import './App.css';
 
-function App() {
+const App = () => {
+  const [provider, setProvider] = useState('fire_store');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ProviderContext.Provider value={{ provider, setProvider }}>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <div className="container">
+            <Switch>
+              <Route exact path="/" component={NoteList} />
+              <Route exact path="/see/:id" component={Note} />
+              <Route exact path="/shift/:id" component={ShiftNote} />
+            </Switch>
+          </div>
+        </div>
+      </Router>
+    </ProviderContext.Provider>
   );
-}
+};
 
 export default App;
