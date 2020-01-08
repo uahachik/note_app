@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 
 import ProviderContext from '../../store/ProviderContext';
 
@@ -46,6 +46,7 @@ export const Comments = ({ id }) => {
   return (
     <div className="mb-4">
       <h3 className="ml-5 text-success">Comments</h3>
+
       <AddComment payload={{ id, setComments }} />
 
       {comments.length > 0 && (

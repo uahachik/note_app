@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useMemo } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -11,91 +11,108 @@ import firebase from 'firebase';
 
 import imperativeRule from './utils/imperativeRule';
 
-import styles from './Comment.module.css';
-
 // Eslint doesn't realize prototype type and showing the warning
 // You could convert "capitalizeFirst" to function or just tolerate
 import { capitalizeFirst } from '../../helpers';
+// import capitalizeFirstLetter from './utils/capitalizeFirstLetter';
 
 const AddComment = ({ payload: { id, setComments } }) => {
   const { provider } = useContext(ProviderContext);
 
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
+  const [isFieldEmpty, setIsFieldEmpty] = useState(false);
 
-  const nameRule = useRef();
-  let { current } = nameRule;
-  current = author.trimStart().split(' ', 2);
-
-  //   console.log(`"${author.trimEnd().capitalizeFirst()}"`);
+  // const current = author.trimStart().split(' ', 2);
 
   //   nameRule.current = author.split(/(\w.+\s).+/i);
 
-  //   console.log('nameRule', nameRule.current);
-
-  //   console.log('author', author);
-
   const onSubmit = async e => {
     e.preventDefault();
-    if (provider === 'fire_store') {
-      await firebase
-        .firestore()
-        .collection('notes')
-        .doc(id)
-        .collection('comments')
-        .add({
-          author: author.trimEnd().capitalizeFirst(),
-          content,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then(function() {
-          console.log('Document successfully written!');
-        })
-        .catch(function(error) {
-          console.error('Error writing document: ', error);
-        });
-    } else {
-      let note;
-      let comments;
-      let notes = JSON.parse(localStorage.getItem('notes'));
-      notes.forEach(n => {
-        if (n.id === id) {
-          note = n;
-          const local = n.comments;
-          if (local.length === 0) {
-            comments = [];
-          } else {
-            comments = local;
+    console.log(imperativeRule(author.trimStart().split(' ', 2)));
+    console.log(content.length);
+    if (
+      imperativeRule(author.trimStart().split(' ', 2)) &&
+      content.length > 0
+    ) {
+      if (provider === 'fire_store') {
+        await firebase
+          .firestore()
+          .collection('notes')
+          .doc(id)
+          .collection('comments')
+          .add({
+            author: author.trimEnd().capitalizeFirst(),
+            // author: capitalizeFirstLetter(author.trimEnd()),
+            content,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .then(function() {
+            console.log('Document successfully written!');
+          })
+          .catch(function(error) {
+            console.error('Error writing document: ', error);
+          });
+      } else {
+        let note;
+        let comments;
+        let notes = JSON.parse(localStorage.getItem('notes'));
+        notes.forEach(n => {
+          if (n.id === id) {
+            note = n;
+            const local = n.comments;
+            if (local.length === 0) {
+              comments = [];
+            } else {
+              comments = local;
+            }
           }
-        }
-      });
+        });
 
-      const comment = {
-        id: Math.round(new Date().getTime() / 1000),
-        author: author.trimEnd().capitalizeFirst(),
-        content,
-        timestamp: { seconds: Math.round(new Date().getTime() / 1000) }
-      };
+        const comment = {
+          id: Math.round(new Date().getTime() / 1000),
+          author: author.trimEnd().capitalizeFirst(),
+          // author: capitalizeFirstLetter(author.trimEnd()),
+          content,
+          timestamp: { seconds: Math.round(new Date().getTime() / 1000) }
+        };
 
-      notes = notes.filter(note => note.id !== id);
-      note = { ...note, comments: [...comments, comment] };
+        notes = notes.filter(note => note.id !== id);
+        note = { ...note, comments: [comment, ...comments] };
 
-      localStorage.setItem('notes', JSON.stringify([...notes, note]));
+        localStorage.setItem('notes', JSON.stringify([...notes, note]));
 
-      setComments([...comments, comment]);
-
-      setAuthor('');
-      setContent('');
+        setComments([comment, ...comments]);
+      }
     }
+
+    setAuthor('');
+    setContent('');
+    setIsFieldEmpty(true);
   };
+
+  const commentInputGroup = useMemo(
+    () => <CommentInputGroup authorObj={{ author, setAuthor, isFieldEmpty }} />,
+    [author, setAuthor, isFieldEmpty]
+  );
+
+  const commentTextareaGroup = useMemo(
+    () => (
+      <CommentTextareaGroup
+        contentObj={{ content, setContent, isFieldEmpty, setIsFieldEmpty }}
+      />
+    ),
+    [content, setContent, isFieldEmpty, setIsFieldEmpty]
+  );
 
   return (
     <form className="mb-4 ml-2" onSubmit={onSubmit}>
-      <CommentInputGroup authorObj={{ setAuthor, current }} />
+      {commentInputGroup}
 
-      <CommentTextareaGroup contentrObj={{ content, setContent }} />
+      {commentTextareaGroup}
 
-      {imperativeRule(current) && content.length > 0 ? (
+      {imperativeRule(author.trimStart().split(' ', 2)) &&
+      content.length > 0 ? (
         <input
           type="submit"
           value="Comment"

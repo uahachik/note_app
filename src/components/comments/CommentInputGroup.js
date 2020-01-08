@@ -2,35 +2,54 @@ import React, { useLayoutEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import styles from './Comment.module.css';
-
-import handleLabelLayout from './utils/handleLabelLayout';
 import imperativeRule from './utils/imperativeRule';
+import serveFieldStyle from './utils/serveFieldStyle';
 
-const CommentInputGroup = ({ authorObj: { setAuthor, current } }) => {
+import capitalizeFirstLetter from './utils/capitalizeFirstLetter';
+
+const CommentInputGroup = ({
+  authorObj: {
+    author,
+    setAuthor,
+    isFieldEmpty
+    //  current
+  }
+}) => {
+  const count = useRef(0);
+  console.log('render input:', count.current++);
+
   const inputGroupRef = useRef();
   const inputRef = useRef();
 
+  author = author.trimStart().split(' ', 2);
+
   useLayoutEffect(() => {
     const { current } = inputRef;
-    handleLabelLayout(inputGroupRef, current);
-  }, []);
+    serveFieldStyle(current, inputGroupRef);
+  }, [isFieldEmpty]);
 
   return (
     <div className={styles.container}>
       <div ref={inputGroupRef} className={styles.inputGroup}>
         <label
           className={styles.label}
-          style={imperativeRule(current) ? { color: '#8f8f8f' } : null}
+          style={imperativeRule(author) ? { color: '#8f8f8f' } : null}
         >
-          {imperativeRule(current)
+          {imperativeRule(author)
             ? 'Your name'
             : 'Your Name should contain two words'}
         </label>
         <input
           ref={inputRef}
           type="text"
-          value={current.join(' ').capitalizeFirst()}
+          value={
+            author.length !== 0
+              ? capitalizeFirstLetter(author.join(' '))
+              : author
+          }
           onChange={e => setAuthor(e.target.value)}
+          // value={capitalizeFirstLetter(author.join(' '))}
+          // onChange={e => setAuthor(e.target.value)}
           className={styles.input}
           autoComplete="off"
         />

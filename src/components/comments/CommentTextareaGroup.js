@@ -2,27 +2,31 @@ import React, { useLayoutEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import styles from './Comment.module.css';
+import serveFieldStyle from './utils/serveFieldStyle';
 
 import TextareaAutosize from 'react-autosize-textarea';
 
-import handleLabelLayout from './utils/handleLabelLayout';
+const CommentTextareaGroup = ({
+  contentObj: { content, setContent, isFieldEmpty, setIsFieldEmpty }
+}) => {
+  const count = useRef(0);
+  console.log('render area:', count.current++);
 
-const CommentTextareaGroup = ({ contentrObj: { content, setContent } }) => {
   const inputGroupRef = useRef();
   const inputRef = useRef();
 
   useLayoutEffect(() => {
     const { current } = inputRef;
-    handleLabelLayout(inputGroupRef, current);
-  }, []);
+
+    serveFieldStyle(current, inputGroupRef);
+
+    setIsFieldEmpty(false);
+  }, [isFieldEmpty, setIsFieldEmpty]);
 
   return (
     <div className={styles.container}>
       <div ref={inputGroupRef} className={styles.inputGroup}>
-        <label
-          className={styles.label}
-          //   style={imperativeRule() ? { color: '#8f8f8f' } : null}
-        >
+        <label className={styles.label}>
           {content.length > 0
             ? null
             : 'Note content is required and will appear here...'}
