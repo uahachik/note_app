@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -47,10 +47,10 @@ const AddComment = ({ payload: { id, setComments } }) => {
             content,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           })
-          .then(function() {
+          .then(function () {
             console.log('Document successfully written!');
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.error('Error writing document: ', error);
           });
       } else {
@@ -112,13 +112,13 @@ const AddComment = ({ payload: { id, setComments } }) => {
       {commentTextareaGroup}
 
       {imperativeRule(author.trimStart().split(' ', 2)) &&
-      content.length > 0 ? (
-        <input
-          type="submit"
-          value="Comment"
-          className="btn btn-success px-4 mt-4"
-        />
-      ) : null}
+        content.length > 0 ? (
+          <input
+            type="submit"
+            value="Comment"
+            className="btn btn-success px-4 mt-4"
+          />
+        ) : null}
     </form>
   );
 };
