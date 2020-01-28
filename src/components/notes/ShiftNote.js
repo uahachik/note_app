@@ -45,13 +45,6 @@ const ShiftNote = ({
             setComments(comments);
           }
         });
-
-        // if (note && note.name && note.content) {
-        // } else {
-        //   window.alert(
-        //     `You have no notes in the local storage yet. Please create one."`
-        //   );
-        // }
       }
     }
   }, [provider, id]);

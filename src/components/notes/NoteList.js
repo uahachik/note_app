@@ -6,11 +6,14 @@ import firebase from 'firebase';
 import ReactQuill from 'react-quill';
 
 import ButtonBar from '../layout/ButtonBar';
+import Alert from '../layout/Alert';
 
 const NoteList = ({ history }) => {
   const { provider } = useContext(ProviderContext);
 
   const [notes, setNotes] = useState([]);
+  const [isAlert, setIsAlert] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     if (provider === 'fire_store') {
@@ -41,13 +44,17 @@ const NoteList = ({ history }) => {
       if (notes) {
         setNotes(notes.reverse());
       } else {
-        window.alert(
-          `You have no notes in the local storage yet. Please create one."`
-        );
-        history.push('/shift/add');
+        setIsAlert(true);
+        setTimeout(() => {
+          setRedirect(true);
+        }, 3000);
       }
     }
-  }, [provider, history]);
+
+    if (redirect) {
+      return history.push('/shift/add');
+    }
+  }, [provider, history, redirect]);
 
   return (
     <>
@@ -55,6 +62,15 @@ const NoteList = ({ history }) => {
         <h2 className="text-center">Loading...</h2>
       ) : (
         <>
+          {isAlert && (
+            <Alert
+              alert={{
+                msg:
+                  'You have no notes in the local storage yet. Please create one.'
+              }}
+            />
+          )}
+
           {notes.map(note => (
             <div key={note.id} className="mb-3">
               <div
