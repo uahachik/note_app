@@ -33,8 +33,9 @@ const NoteList = ({ history }) => {
             setNotes(notes);
           });
       } catch (err) {
-        console.log('Error getting documents', err);
+        console.error('Error getting documents', err);
       }
+
       return () => {
         unsubscribeSnapshot();
       };
@@ -49,47 +50,40 @@ const NoteList = ({ history }) => {
           setRedirect(true);
         }, 3000);
       }
-    }
-
-    if (redirect) {
-      return history.push('/shift/add');
+      if (redirect) {
+        history.push('/shift/add');
+      }
     }
   }, [provider, history, redirect]);
 
   return (
     <>
-      {notes.length === 0 ? (
-        <h2 className="text-center">Loading...</h2>
-      ) : (
-        <>
-          {isAlert && (
-            <Alert
-              alert={{
-                msg:
-                  'You have no notes in the local storage yet. Please create one.'
-              }}
-            />
-          )}
-
-          {notes.map(note => (
-            <div key={note.id} className="mb-3">
-              <div
-                className="card-header bg-secondary text-white"
-                style={{ display: 'flex' }}
-              >
-                <h5 className="pt-1 mr-auto ml-1">{note.name}</h5>
-                <ButtonBar payload={{ note, setNotes }} />
-              </div>
-
-              <ReactQuill
-                theme={'bubble'}
-                value={note.content ? note.content : null}
-                readOnly={true}
-              />
-            </div>
-          ))}
-        </>
+      {isAlert && (
+        <Alert
+          alert={{
+            msg:
+              'You have no notes in the local storage yet. Please create one.'
+          }}
+        />
       )}
+
+      {notes.map(note => (
+        <div key={note.id} className="mb-3">
+          <div
+            className="card-header bg-secondary text-white"
+            style={{ display: 'flex' }}
+          >
+            <h5 className="pt-1 mr-auto ml-1">{note.name}</h5>
+            <ButtonBar payload={{ note, setNotes }} />
+          </div>
+
+          <ReactQuill
+            theme={'bubble'}
+            value={note.content ? note.content : null}
+            readOnly={true}
+          />
+        </div>
+      ))}
     </>
   );
 };

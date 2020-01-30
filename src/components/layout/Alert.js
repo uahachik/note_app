@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 
 const Alert = ({ alert }) => <div style={alertStyle}>{alert.msg}</div>;
 
+Alert.defaultProps = {
+  alert: ''
+};
+
 Alert.propTypes = {
-  alerts: PropTypes.string.isRequired
+  alerts: PropTypes.string
 };
 
 const alertStyle = {
