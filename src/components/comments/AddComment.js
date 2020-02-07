@@ -29,8 +29,6 @@ const AddComment = ({ payload: { id, setComments } }) => {
 
   const onSubmit = async e => {
     e.preventDefault();
-    console.log(imperativeRule(author.trimStart().split(' ', 2)));
-    console.log(content.length);
     if (
       imperativeRule(author.trimStart().split(' ', 2)) &&
       content.length > 0
