@@ -11,11 +11,7 @@ const Note = lazy(() => import('./components/notes/Note'));
 const ShiftNote = lazy(() => import('./components/notes/ShiftNote'));
 
 // pull-request prepare
-<<<<<<< HEAD
 console.log('test')
-=======
-console.log('push')
->>>>>>> 86a163e91a2b78acc21ba47ccb911e5ddb035912
 
 const App = () => {
   const [provider, setProvider] = useState('fire_store');
