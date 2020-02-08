@@ -10,6 +10,9 @@ const NoteList = lazy(() => import('./components/notes/NoteList'));
 const Note = lazy(() => import('./components/notes/Note'));
 const ShiftNote = lazy(() => import('./components/notes/ShiftNote'));
 
+// pull-request prepare
+console.log('request')
+
 const App = () => {
   const [provider, setProvider] = useState('fire_store');
 
