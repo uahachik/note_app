@@ -16,7 +16,7 @@ import imperativeRule from './utils/imperativeRule';
 import { capitalizeFirst } from '../../helpers';
 // import capitalizeFirstLetter from './utils/capitalizeFirstLetter';
 
-const AddComment = ({ payload: { id, setComments } }) => {
+const AddComment = ({ payload: { id, setComments, errStyle } }) => {
   const { provider } = useContext(ProviderContext);
 
   const [author, setAuthor] = useState('');
@@ -29,8 +29,6 @@ const AddComment = ({ payload: { id, setComments } }) => {
 
   const onSubmit = async e => {
     e.preventDefault();
-    console.log(imperativeRule(author.trimStart().split(' ', 2)));
-    console.log(content.length);
     if (
       imperativeRule(author.trimStart().split(' ', 2)) &&
       content.length > 0
@@ -48,10 +46,11 @@ const AddComment = ({ payload: { id, setComments } }) => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           })
           .then(function () {
-            console.log('Document successfully written!');
+            const resStyle = ['color: green', 'background: yellow', 'font-size: 21px', 'padding: 10px 15px'].join(';');
+            console.log('%cDocument successfully written!', resStyle);
           })
           .catch(function (error) {
-            console.error('Error writing document: ', error);
+            console.error('%cError writing document:', errStyle, error);
           });
       } else {
         let note;
