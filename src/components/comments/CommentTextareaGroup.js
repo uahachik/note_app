@@ -10,7 +10,10 @@ const CommentTextareaGroup = ({
   contentObj: { content, setContent, isFieldEmpty, setIsFieldEmpty }
 }) => {
   const count = useRef(0);
-  console.log('render area:', count.current++);
+  const currInc = count.current++;
+  const counStyle = ['color: white', 'background: DarkTurquoise', 'font-size: 14px', 'padding: 10px 15px'].join(';');
+
+  console.log(`%crender area: ${currInc}`, counStyle);
 
   const inputGroupRef = useRef();
   const inputRef = useRef();
