@@ -16,7 +16,10 @@ const CommentInputGroup = ({
   }
 }) => {
   const count = useRef(0);
-  console.log('render input:', count.current++);
+  const currInc = count.current++;
+  const counStyle = ['color: white', 'background: DeepSkyBlue', 'font-size: 14px', 'padding: 10px 0'].join(';');
+
+  console.log(`%cRender input: %c${currInc}`, `${counStyle}; padding-left: 15px`, `${counStyle}; color: red; font-weight: 700; padding-right: 15px`);
 
   const inputGroupRef = useRef();
   const inputRef = useRef();

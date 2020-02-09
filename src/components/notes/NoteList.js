@@ -33,7 +33,7 @@ const NoteList = ({ history }) => {
             setNotes(notes);
           });
       } catch (err) {
-        console.error('Error getting documents', err);
+        console.error('%cError getting documents', 'color: black; background: red; font-size: 30px; padding: 15px', err);
       }
 
       return () => {

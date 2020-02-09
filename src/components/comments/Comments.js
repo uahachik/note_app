@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 
 import ProviderContext from '../../store/ProviderContext';
 
@@ -11,6 +11,8 @@ export const Comments = ({ id }) => {
   const { provider } = useContext(ProviderContext);
 
   const [comments, setComments] = useState([]);
+
+  const errStyle = 'color: black; background: red; font-size: 30px; padding: 15px';
 
   useEffect(() => {
     if (provider === 'fire_store') {
@@ -30,7 +32,7 @@ export const Comments = ({ id }) => {
             setComments(comments);
           });
       } catch (err) {
-        console.log('Error getting documents', err);
+        console.log('%cError getting documents', errStyle, err);
       }
     } else {
       const notes = JSON.parse(localStorage.getItem('notes'));
@@ -47,7 +49,7 @@ export const Comments = ({ id }) => {
     <div className="mb-4">
       <h3 className="ml-5 text-success">Comments</h3>
 
-      <AddComment payload={{ id, setComments }} />
+      <AddComment payload={{ id, setComments, errStyle }} />
 
       {comments.length > 0 && (
         <>
