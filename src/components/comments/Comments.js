@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import ProviderContext from '../../store/ProviderContext';
 
@@ -12,7 +12,8 @@ export const Comments = ({ id }) => {
 
   const [comments, setComments] = useState([]);
 
-  const errStyle = 'color: black; background: red; font-size: 30px; padding: 15px';
+  const errStyle =
+    'color: black; background: red; font-size: 30px; padding: 15px';
 
   useEffect(() => {
     if (provider === 'fire_store') {
