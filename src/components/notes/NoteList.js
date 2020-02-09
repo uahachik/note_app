@@ -29,7 +29,7 @@ const NoteList = ({ history }) => {
               data['id'] = _doc.id;
               return data;
             });
-            setNotes([]); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // setNotes([]); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             setNotes(notes);
           });
       } catch (err) {
@@ -58,32 +58,32 @@ const NoteList = ({ history }) => {
 
   return (
     <>
-      {isAlert && (
+      {isAlert ? (
         <Alert
           alert={{
             msg:
               'You have no notes in the local storage yet. Please create one.'
           }}
         />
-      )}
+      ) : (
+        notes.map(note => (
+          <div key={note.id} className="mb-3">
+            <div
+              className="card-header bg-secondary text-white"
+              style={{ display: 'flex' }}
+            >
+              <h5 className="pt-1 mr-auto ml-1">{note.name}</h5>
+              <ButtonBar payload={{ note, setNotes }} />
+            </div>
 
-      {notes.map(note => (
-        <div key={note.id} className="mb-3">
-          <div
-            className="card-header bg-secondary text-white"
-            style={{ display: 'flex' }}
-          >
-            <h5 className="pt-1 mr-auto ml-1">{note.name}</h5>
-            <ButtonBar payload={{ note, setNotes }} />
+            <ReactQuill
+              theme={'bubble'}
+              value={note.content ? note.content : null}
+              readOnly={true}
+            />
           </div>
-
-          <ReactQuill
-            theme={'bubble'}
-            value={note.content ? note.content : null}
-            readOnly={true}
-          />
-        </div>
-      ))}
+        ))
+      )}
     </>
   );
 };
