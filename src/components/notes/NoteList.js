@@ -13,7 +13,6 @@ const NoteList = ({ history }) => {
 
   const [notes, setNotes] = useState([]);
   const [isAlert, setIsAlert] = useState(false);
-  const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     if (provider === 'fire_store') {
@@ -33,7 +32,11 @@ const NoteList = ({ history }) => {
             setNotes(notes);
           });
       } catch (err) {
-        console.error('%cError getting documents', 'color: black; background: red; font-size: 30px; padding: 15px', err);
+        console.error(
+          '%cError getting documents',
+          'color: black; background: red; font-size: 30px; padding: 15px',
+          err
+        );
       }
 
       return () => {
@@ -46,15 +49,14 @@ const NoteList = ({ history }) => {
         setNotes(notes.reverse());
       } else {
         setIsAlert(true);
+      }
+      if (isAlert) {
         setTimeout(() => {
-          setRedirect(true);
+          history.push('/shift/add');
         }, 3000);
       }
-      if (redirect) {
-        history.push('/shift/add');
-      }
     }
-  }, [provider, history, redirect]);
+  }, [provider, history, isAlert]);
 
   return (
     <>

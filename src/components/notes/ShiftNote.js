@@ -7,6 +7,7 @@ import { readDoc } from '../../actions/read';
 import { createDoc } from '../../actions/create';
 import { updateDoc } from '../../actions/update';
 // import { debounce } from '../../helpers';
+import Alert from '../layout/Alert';
 
 import ReactQuill from 'react-quill';
 import uuid from 'uuid';
@@ -23,6 +24,7 @@ const ShiftNote = ({
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
   const [comments, setComments] = useState([]);
+  const [isAlert, setIsAlert] = useState(false);
 
   useEffect(() => {
     setName('');
@@ -96,7 +98,6 @@ const ShiftNote = ({
             time: Math.round(new Date().getTime() / 1000),
             comments
           };
-
           // save to local storage
           localStorage.setItem('notes', JSON.stringify([...notes, note]));
         }
@@ -104,47 +105,57 @@ const ShiftNote = ({
 
       history.push('/');
     } else {
-      window.alert('Note Content is Required!');
+      setIsAlert(true);
+      console.log(window);
+      setTimeout(() => {
+        setIsAlert(false);
+      }, 3000);
     }
   };
 
   return (
-    <form className="form container" onSubmit={onSubmit}>
-      <div className="form-group bg-info">
-        <div className="card-header" style={{ borderBottom: 'none' }}>
-          {/* <div className="col-12 p-3" style={{ borderBottom: 'none' }}> */}
-          <label htmlFor="name">
-            <span className={name.length === 0 ? 'text-warning' : 'text-muted'}>
-              {name.length === 0 ? 'Note name is required' : 'Note name'}
-            </span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Give a name to the note"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            className="form-control "
-            required
-          />
+    <>
+      {isAlert && <Alert alert={{ msg: 'Note Content is Required!' }} />}
+
+      <form className="form container" onSubmit={onSubmit}>
+        <div className="form-group bg-info">
+          <div className="card-header" style={{ borderBottom: 'none' }}>
+            {/* <div className="col-12 p-3" style={{ borderBottom: 'none' }}> */}
+            <label htmlFor="name">
+              <span
+                className={name.length === 0 ? 'text-warning' : 'text-muted'}
+              >
+                {name.length === 0 ? 'Note name is required' : 'Note name'}
+              </span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Give a name to the note"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="form-control "
+              required
+            />
+          </div>
+
+          <div className="card-header">
+            <ReactQuill
+              value={content}
+              onChange={handleContentChange}
+              modules={ShiftNote.modules}
+              placeholder={placeholder}
+            />
+          </div>
         </div>
 
-        <div className="card-header">
-          <ReactQuill
-            value={content}
-            onChange={handleContentChange}
-            modules={ShiftNote.modules}
-            placeholder={placeholder}
-          />
-        </div>
-      </div>
-
-      <input
-        type="submit"
-        value={id === 'add' ? 'ADD NOTE' : 'UPDATE NOTE'}
-        className="btn btn-info px-5"
-      />
-    </form>
+        <input
+          type="submit"
+          value={id === 'add' ? 'ADD NOTE' : 'UPDATE NOTE'}
+          className="btn btn-info px-5"
+        />
+      </form>
+    </>
   );
 };
 
