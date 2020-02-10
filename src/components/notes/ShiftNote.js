@@ -106,7 +106,6 @@ const ShiftNote = ({
       history.push('/');
     } else {
       setIsAlert(true);
-      console.log(window);
       setTimeout(() => {
         setIsAlert(false);
       }, 3000);
